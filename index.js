@@ -95,6 +95,7 @@ instance.prototype.CHOICES_SOURCES = [
 	{ label: 'HDP', id: 'SIHDP' },
 	{ label: 'TV/CBL', id: 'SITV/CBL' },
 	{ label: 'SAT', id: 'SISAT' },
+	{ label: 'BD', id:'SIBD' },
 	{ label: 'VCR', id: 'SIVCR' },
 	{ label: 'DVR', id: 'SIDVR' },
 	{ label: 'V.AUX', id: 'SIV.AUX' },
@@ -134,15 +135,26 @@ instance.prototype.actions = function (system) {
 				label: 'up/down',
 				id: 'volume',
 				default: 'volume_up',
-				choices: [{ label: 'Volume up', id: 'volume_up' }, { label: 'Volume down', id: 'volume_down' }]
-			}/*,{
+				choices: [{ label: 'Volume up', id: 'volume_up' }, { label: 'Volume down', id: 'volume_down' }, { label: 'Set Volume', id: 'volume_set' }]
+			},{
 				type: 'textinput',
-				label: 'dB',
-				id: 'dBvalue',
-				default: '6',
+				label: 'Volume value 00-98 (80=0dB)',
+				id: 'vol',
+				default: '80',
+				regex: '[0-9][0-9]'
+			}]
+		/*},
+		'volume_num': {
+			label: 'Set Volume',
+			options: [ {
+				type: 'textinput',
+				label: 'Volume level 00-99 (80 = 0db, 00 = -80db, 99 = mute)',
+				id: 'vol',
+				default: '80',
 				regex: self.REGEX_NUMBER
-			}*/]
-		},
+				}
+			]
+		},*/
 		'source': {
 			label: 'Source selection',
 			options: [{
@@ -187,8 +199,13 @@ instance.prototype.action = function (action) {
 				cmd = 'MVUP\r';
 			} else if (opt.volume == 'volume_down') {
 				cmd = 'MVDOWN\r';
+			} else if (opt.volume == 'volume_set') {
+				cmd = 'MV' + opt.vol + '\r';
 			}
 			break
+		/* case 'volume_num':
+			cmd = 'MV' + opt.vol + '\r';
+			break */
 
 		case 'source':
 			cmd = opt.source + '\r';
